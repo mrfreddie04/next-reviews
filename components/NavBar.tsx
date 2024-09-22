@@ -1,6 +1,10 @@
 import NavLink from "./NavLink";
+import { getUserFromSession } from "@/lib/auth";
+import SignOutButton from "./SignOutButton";
 
-export default function NavBar() {
+export default async function NavBar() {
+
+  const user = await getUserFromSession();
 
   return (
     <nav>
@@ -20,7 +24,19 @@ export default function NavBar() {
             About
           </NavLink>  
         </li>
+        {user ? (
+          <li>
+            <SignOutButton/>
+          </li>
+        ): (
+          <li>
+            <NavLink href={"/sign-in"} prefetch={false}>
+              Sign in
+            </NavLink>  
+          </li>
+        )}
       </ul>
     </nav>
   )
 }
+

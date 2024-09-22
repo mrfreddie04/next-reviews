@@ -1,9 +1,17 @@
+import { Suspense, lazy } from "react";
 import Image from "next/image";
 import { Metadata } from "next";
 import { notFound } from 'next/navigation';
+import { ChatBubbleBottomCenterTextIcon } from "@heroicons/react/24/outline";
+import { getReview, getSlugs } from "@/lib/reviews";
 import Heading from "@/components/Heading";
 import ShareLinkButton from "@/components/ShareLinkButton";
-import { getReview, getSlugs } from "@/lib/reviews";
+import CommentList from "@/components/CommentList";
+import CommentForm from "@/components/CommentForm";
+import CommentListSkeleton from "@/components/CommentListSkeleton";
+import { getUserFromSession } from "@/lib/auth";
+import Link from "next/link";
+//import { delay } from "@/lib/utils";
 
 type Props = {
   params: {
@@ -35,8 +43,13 @@ export async function generateMetadata({params: { slug }}: Props) {
 
 export default async function ReviewPage({params: { slug }}: Props) {
   const review = await getReview(slug);
+  const user = await getUserFromSession();
 
   console.log("[ReviewPage] rendering", slug);
+
+  //await delay(1000);
+
+  //const CommentListLazy = lazy(() => import("@/components/CommentList"));
 
   if(!review) {
     notFound();
@@ -63,6 +76,22 @@ export default async function ReviewPage({params: { slug }}: Props) {
       <article dangerouslySetInnerHTML={{__html:review.body}}
         className='prose prose-slate max-w-screen-sm'
       />
+      <section className="border-dashed border-t max-w-screen-sm mt-3 py-3">
+        <h2 className="font-bold flex gap-2 items-center text-xl">
+          <ChatBubbleBottomCenterTextIcon className="w-6 h-6"/>
+          Comments
+        </h2>
+        {user ? (
+          <CommentForm userName={user.name} title={review.title} slug={review.slug}/>
+        ) : (
+          <div className="border bg-white mt-3 py-3 px-3 rounded">
+            Please <Link className="text-orange-800 hover:underline" href={"/sign-in"}>Sign In</Link> to have your say!
+          </div>
+        )}
+        <Suspense fallback={<CommentListSkeleton/>}>
+          <CommentList slug={review.slug}/>
+        </Suspense>
+      </section>
     </>
   )
 }

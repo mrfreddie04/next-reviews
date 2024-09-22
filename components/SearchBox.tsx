@@ -5,7 +5,6 @@ import { Combobox, ComboboxInput, ComboboxOption, ComboboxOptions } from "@headl
 import { useRouter } from "next/navigation";
 import { useDebounce } from "use-debounce";
 import { useIsClient } from "@/hooks/useIsClient";
-import type { SearchableReview } from "@/lib/reviews";
 
 type Props = {
   reviews: SearchableReview[]

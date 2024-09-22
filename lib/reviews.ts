@@ -2,6 +2,7 @@ import 'server-only';
 
 import { marked } from "marked";
 import qs from "qs";
+import { Pagination, Review, Reviews, SearchableReview } from '@/types';
 //import { readFile, readdir } from "node:fs/promises";
 //import matter from "gray-matter";
 
@@ -12,29 +13,29 @@ console.log("[CMS_URL]", CMS_URL);
 export const CACHE_TAG_REVIEWS = "reviews";
 export const PAGE_SIZE = 6;
 
-export type Pagination = {
-  pageSize?: number | null, 
-  pageNumber?: number | null
-}
+// export type Pagination = {
+//   pageSize?: number | null, 
+//   pageNumber?: number | null
+// }
 
-export type Review = {
-  body?: string, 
-  title: string, 
-  subtitle: string,
-  image: string, 
-  date: string,
-  slug: string
-}
+// export type Review = {
+//   body?: string, 
+//   title: string, 
+//   subtitle: string,
+//   image: string, 
+//   date: string,
+//   slug: string
+// }
 
-export type SearchableReview = {
-  slug: string,
-  title: string
-}
+// export type SearchableReview = {
+//   slug: string,
+//   title: string
+// }
 
-export type Reviews = {
-  reviews: Review[],
-  pageCount: number
-}
+// export type Reviews = {
+//   reviews: Review[],
+//   pageCount: number
+// }
 
 export async function getReview(slug: string): Promise<Review|null> {
   const parameters = {
